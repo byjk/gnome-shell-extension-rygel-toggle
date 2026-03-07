@@ -7,7 +7,9 @@ A simple GNOME Shell extension that provides quick access to control Rygel, the 
 - **Quick Toggle**: Click the button in GNOME Quick Settings to start or stop Rygel
 - **Automatic Status Updates**: Checks Rygel status every 2 seconds
 
-## Installation
+## Screenshot
+
+![Main](screenshot.jpg)
 
 ### Prerequisites
 
