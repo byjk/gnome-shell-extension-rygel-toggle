@@ -1,0 +1,82 @@
+/* stylesheet.css
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* Rygel Control Button Styles */
+.rygel-control-button {
+    padding: 0 4px;
+}
+
+.rygel-control-button .system-status-icon {
+    icon-size: 16px;
+}
+
+/* Running state - green tint */
+.rygel-running {
+    color: #26a269;
+}
+
+/* Stopped state - red tint */
+.rygel-stopped {
+    color: #e01b24;
+}
+
+/* Hover effects */
+.rygel-control-button:hover .rygel-running {
+    color: #33d17a;
+}
+
+.rygel-control-button:hover .rygel-stopped {
+    color: #f66151;
+}
+
+/* Active/pressed state */
+.rygel-control-button:active .system-status-icon {
+    color: #ffffff;
+}
+
+/* Menu Item Styles */
+.popup-menu-item.rygel-menu-item {
+    spacing: 12px;
+}
+
+.popup-menu-item.rygel-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.popup-menu-item.rygel-menu-item:active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Status menu item (non-reactive) */
+.popup-menu-item.rygel-status-item {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.popup-menu-item.rygel-status-item.running {
+    color: #33d17a;
+}
+
+.popup-menu-item.rygel-status-item.stopped {
+    color: #f66151;
+}
+
+/* Separator styling */
+.popup-separator-menu-item {
+    margin: 6px 0;
+}

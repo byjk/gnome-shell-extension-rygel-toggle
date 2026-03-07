@@ -1,0 +1,8 @@
+{
+  "name": "Rygel Control",
+  "description": "A GNOME quick setting for starting and stopping the Rygel UPnP/DLNA media server",
+  "uuid": "rygel-toggle@byjk.github.com",
+  "shell-version": ["46", "47", "48"],
+  "version": "2.0",
+  "url": "https://github.com/byjk/gnome-shell-extension-rygel-toggle"
+}
