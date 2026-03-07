@@ -4,14 +4,7 @@ A simple GNOME Shell extension that provides quick access to control Rygel, the 
 
 ## Features
 
-- **Quick Toggle**: Left-click the panel button to start or stop Rygel
-- **Status Indicator**: Visual indication of Rygel's current state
-  - Green tint when Rygel is running
-  - Red tint when Rygel is stopped
-- **Context Menu**: Right-click for additional options
-  - Start Rygel
-  - Stop Rygel
-  - Current status display
+- **Quick Toggle**: Click the button in GNOME Quick Settings to start or stop Rygel
 - **Automatic Status Updates**: Checks Rygel status every 2 seconds
 
 ## Installation
@@ -50,75 +43,11 @@ cp -r /path/to/rygel-extension ~/.local/share/gnome-shell/extensions/rygel-toggl
 
    Or log out and log back in.
 
-## Usage
-
-### Starting and Stopping Rygel
-
-- **Left-click** the Rygel button in the top panel to toggle Rygel on/off
-- When the icon is green with a stop symbol, Rygel is running
-- When the icon is red with a play symbol, Rygel is stopped
-
-### Context Menu
-
-- **Right-click** the Rygel button to open the context menu
-- Select "Start Rygel" to start the media server
-- Select "Stop Rygel" to stop the media server
-- The status line shows the current state of Rygel
-
 ## Requirements
 
 - GNOME Shell 46 or later
 - Rygel media server (UPnP/DLNA)
 - GJS (GNOME JavaScript)
-
-## Troubleshooting
-
-### Extension doesn't appear in the panel
-
-1. Make sure the extension is enabled:
-   ```bash
-   gnome-extensions list --enabled
-   ```
-
-2. Check for errors in Looking Glass:
-   - Press `Alt+F2`
-   - Type `lg` and press `Enter`
-   - Go to the "Extensions" tab and look for error messages
-
-### Rygel won't start
-
-1. Verify Rygel is installed:
-   ```bash
-   which rygel
-   ```
-
-2. Check if Rygel is already running:
-   ```bash
-   pgrep -x rygel
-   ```
-
-3. Try starting Rygel manually to see error messages:
-   ```bash
-   rygel
-   ```
-
-### Status indicator doesn't update
-
-The extension checks Rygel's status every 2 seconds. If the indicator doesn't update, try:
-
-1. Disable and re-enable the extension
-2. Restart GNOME Shell
-3. Check Looking Glass for JavaScript errors
-
-## Development
-
-To modify the extension:
-
-1. Edit the source files in your extension directory
-2. Restart GNOME Shell or use Looking Glass to reload the extension:
-   - Press `Alt+F2`, type `lg`, press Enter
-   - Go to the "Extensions" tab
-   - Find "Rygel Control" and click the reload button
 
 ## License
 
