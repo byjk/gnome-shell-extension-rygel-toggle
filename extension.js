@@ -55,12 +55,46 @@ class RygelToggle extends QuickToggle {
         });
     }
 
-		_isRygelRunning() {
+		_isRygelRunning(callback) {
 			try {
-				const [success, stdout] = GLib.spawn_command_line_sync('pgrep -x rygel');
-				return success && stdout.length > 0;
+				let stdout = [];
+				let [success, pid, stdinFd, stdoutFd, stderrFd] = GLib.spawn_async_with_pipes(
+					null,
+					['pgrep', '-x', 'rygel'],
+					null,
+					GLib.SpawnFlags.SEARCH_PATH,
+					null
+				);
+
+				if (success) {
+					let stdoutStream = new Gio.UnixInputStream({ fd: stdoutFd, close_fd: true });
+					let dataInputStream = new Gio.DataInputStream({ base_stream: stdoutStream });
+
+					const readStream = () => {
+						dataInputStream.read_line_async(GLib.PRIORITY_DEFAULT, null, (source, result) => {
+							let [line, length] = source.read_line_finish(result);
+							if (line !== null) {
+								stdout.push(line);
+								readStream();
+							} else {
+								// Done reading
+								GLib.spawn_close_pid(pid);
+								if (callback) {
+									callback(stdout.length > 0);
+								}
+							}
+						});
+					};
+					readStream();
+				} else {
+					if (callback) {
+						callback(false);
+					}
+				}
 			} catch (e) {
-				return false;
+				if (callback) {
+					callback(false);
+				}
 			}
 		}
 
@@ -76,7 +110,6 @@ class RygelToggle extends QuickToggle {
 				// Wait a moment and then check status
 				this._startTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
 					this._checkRygelStatus();
-					this._updateButtonState();
 					this._startTimeoutId = null;
 					return GLib.SOURCE_REMOVE;
 				});
@@ -87,11 +120,16 @@ class RygelToggle extends QuickToggle {
 
 		_stopRygel() {
 			try {
-				GLib.spawn_command_line_sync('rygel -s');
+				GLib.spawn_async(
+					null,
+					['rygel', '-s'],
+					null,
+					GLib.SpawnFlags.SEARCH_PATH,
+					null
+				);
 				// Wait a moment and then check status
 				this._stopTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
 					this._checkRygelStatus();
-					this._updateButtonState();
 					this._stopTimeoutId = null;
 					return GLib.SOURCE_REMOVE;
 				});
@@ -101,7 +139,10 @@ class RygelToggle extends QuickToggle {
 		}
 
 		_checkRygelStatus() {
-			this._rygelRunning = this._isRygelRunning();
+			this._isRygelRunning((running) => {
+				this._rygelRunning = running;
+				this._updateButtonState();
+			});
 		}
 
 		_updateButtonState() {
@@ -154,27 +195,62 @@ const RygelIndicator = GObject.registerClass(
 
 			// Initial status check
 			this._checkRygelStatus();
-			this._updateButtonState();
 
 			// Set up periodic status check (every 2 seconds)
 			this._statusCheckId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 2, () => {
 				this._checkRygelStatus();
-				this._updateButtonState();
 				return GLib.SOURCE_CONTINUE;
 			});
 		}
 
-		_isRygelRunning() {
+		_isRygelRunning(callback) {
 			try {
-				const [success, stdout] = GLib.spawn_command_line_sync('pgrep -x rygel');
-				return success && stdout.length > 0;
+				let stdout = [];
+				let [success, pid, stdinFd, stdoutFd, stderrFd] = GLib.spawn_async_with_pipes(
+					null,
+					['pgrep', '-x', 'rygel'],
+					null,
+					GLib.SpawnFlags.SEARCH_PATH,
+					null
+				);
+
+				if (success) {
+					let stdoutStream = new Gio.UnixInputStream({ fd: stdoutFd, close_fd: true });
+					let dataInputStream = new Gio.DataInputStream({ base_stream: stdoutStream });
+
+					const readStream = () => {
+						dataInputStream.read_line_async(GLib.PRIORITY_DEFAULT, null, (source, result) => {
+							let [line, length] = source.read_line_finish(result);
+							if (line !== null) {
+								stdout.push(line);
+								readStream();
+							} else {
+								// Done reading
+								GLib.spawn_close_pid(pid);
+								if (callback) {
+									callback(stdout.length > 0);
+								}
+							}
+						});
+					};
+					readStream();
+				} else {
+					if (callback) {
+						callback(false);
+					}
+				}
 			} catch (e) {
-				return false;
+				if (callback) {
+					callback(false);
+				}
 			}
 		}
 
 		_checkRygelStatus() {
-			this._rygelRunning = this._isRygelRunning();
+			this._isRygelRunning((running) => {
+				this._rygelRunning = running;
+				this._updateButtonState();
+			});
 		}
 
 		_updateButtonState() {
