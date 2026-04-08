@@ -41,6 +41,10 @@ class RygelToggle extends QuickToggle {
         // Store the icon for later use
         this._rygelIcon = rygelIcon;
 
+        // Initialize timeout source IDs
+        this._startTimeoutId = null;
+        this._stopTimeoutId = null;
+
         // Connect toggle clicked signal
         this.connect('clicked', () => {
             if (this.checked) {
@@ -70,9 +74,10 @@ class RygelToggle extends QuickToggle {
 					null
 				);
 				// Wait a moment and then check status
-				GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+				this._startTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
 					this._checkRygelStatus();
 					this._updateButtonState();
+					this._startTimeoutId = null;
 					return GLib.SOURCE_REMOVE;
 				});
 			} catch (e) {
@@ -84,9 +89,10 @@ class RygelToggle extends QuickToggle {
 			try {
 				GLib.spawn_command_line_sync('rygel -s');
 				// Wait a moment and then check status
-				GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+				this._stopTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
 					this._checkRygelStatus();
 					this._updateButtonState();
+					this._stopTimeoutId = null;
 					return GLib.SOURCE_REMOVE;
 				});
 			} catch (e) {
@@ -107,6 +113,20 @@ class RygelToggle extends QuickToggle {
 				this.gicon = this._rygelIcon;
 				this.set({ checked: false, subtitle: 'Stopped' });
 			}
+		}
+
+		destroy() {
+			// Clean up timeout sources
+			if (this._startTimeoutId !== null) {
+				GLib.source_remove(this._startTimeoutId);
+				this._startTimeoutId = null;
+			}
+			if (this._stopTimeoutId !== null) {
+				GLib.source_remove(this._stopTimeoutId);
+				this._stopTimeoutId = null;
+			}
+
+			super.destroy();
 		}
 	}
 );
